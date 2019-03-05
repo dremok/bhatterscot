@@ -12,8 +12,8 @@ import torch
 import torch.nn as nn
 from playsound import playsound
 
-from bhatterscot.config import save_dir, model_name, corpus_name, encoder_n_layers, decoder_n_layers, hidden_size, \
-    dropout, attn_model, device
+from bhatterscot.config import save_dir, model_name, CORPUS_NAME, encoder_n_layers, decoder_n_layers, hidden_size, \
+    dropout, attn_model, device, checkpoint_iter
 from bhatterscot.model import EncoderRNN, LuongAttnDecoderRNN
 from bhatterscot.text_data import normalize_string, MAX_LENGTH, indexes_from_sentence
 from bhatterscot.vocabulary import SOS_token, Vocabulary
@@ -21,21 +21,20 @@ from bhatterscot.vocabulary import SOS_token, Vocabulary
 delimiter = '\t'
 delimiter = str(codecs.decode(delimiter, 'unicode_escape'))
 
-vocabulary = Vocabulary(corpus_name)
+vocabulary = Vocabulary(CORPUS_NAME)
 
 # Set checkpoint to load from; set to None if starting from scratch
-checkpoint_iter = 100
-loadFilename = os.path.join(save_dir, model_name, corpus_name,
+loadFilename = os.path.join(save_dir, model_name, CORPUS_NAME,
                             '{}-{}_{}'.format(encoder_n_layers, decoder_n_layers, hidden_size),
                             '{}_checkpoint.tar'.format(checkpoint_iter))
 
 checkpoint = None
-# Load model if a loadFilename is provided
+# Load model if a load_filename is provided
 if loadFilename:
     # If loading on same machine the model was trained on
     checkpoint = torch.load(loadFilename)
     # If loading a model trained on GPU to CPU
-    # checkpoint = torch.load(loadFilename, map_location=torch.device('cpu'))
+    # checkpoint = torch.load(load_filename, map_location=torch.device('cpu'))
     encoder_sd = checkpoint['en']
     decoder_sd = checkpoint['de']
     encoder_optimizer_sd = checkpoint['en_opt']
@@ -161,7 +160,7 @@ if SPEECH:
     tts.save('bot.mp3')
     playsound('bot.mp3')
 
-corpus = os.path.join('data', corpus_name)
+corpus = os.path.join('data', CORPUS_NAME)
 new_conversation_file = os.path.join(corpus, 'new_conversations.txt')
 
 while True:

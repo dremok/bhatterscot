@@ -21,9 +21,11 @@ clip = 50.0
 teacher_forcing_ratio = 0.5
 learning_rate = 0.0001
 decoder_learning_ratio = 5.0
-n_iteration = 100
+n_iteration = 4000
 print_every = 1
-save_every = 100
+save_every = 500
+checkpoint_iter = 4000
 
 save_dir = os.path.join('data', 'save')
-corpus_name = 'swe'
+
+CORPUS_NAME = 'vg'
