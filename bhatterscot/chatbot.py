@@ -98,9 +98,9 @@ class ChatBot:
             output_sentence = output_sentence.replace('i m', "i am").replace('you re', "you are") \
                 .replace('i ve', "i have").replace('can t', "cannot").replace('i ll', "i will") \
                 .replace('it s', "it is").replace('don t', "do not").replace('couldn t', "could not") \
-                .replace(' i ', ' I ').replace('we re', "we are").replace('we ll', "we will") \
-                .replace('didn t', "did not")
-            output_sentence = output_sentence.capitalize()
+                .replace('we re', "we are").replace('we ll', "we will") \
+                .replace('didn t', "did not").replace('they ll', "they will").replace('they re', 'they are')
+            output_sentence = output_sentence.capitalize().replace(' i ', ' I ')
             for sep in ['.', '!', '?']:
                 if sep in output_sentence:
                     output_sentence = f'{sep} '.join(x.strip()[0].upper() + x.strip()[1:]

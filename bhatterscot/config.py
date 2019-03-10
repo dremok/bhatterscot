@@ -24,6 +24,6 @@ print_every = 1
 save_every = 500
 checkpoint_to_load = 5000
 
-save_dir = '/Users/max.leander/src/random/bhatterscot/data/save'
+save_dir = '/Users/max.leander/src/random/data/save'
 
 CORPUS_NAME = 'vg'
