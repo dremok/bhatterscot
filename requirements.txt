@@ -5,4 +5,4 @@ gtts==2.0.3
 playsound==1.2.2
 falcon==1.4.1
 gunicorn==19.9.0
-yattag
+yattag==1.11.1
