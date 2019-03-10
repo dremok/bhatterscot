@@ -1,0 +1,8 @@
+pygame==1.9.4
+SpeechRecognition==3.8.1
+torchvision==0.2.2.post3
+gtts==2.0.3
+playsound==1.2.2
+falcon==1.4.1
+gunicorn==19.9.0
+yattag

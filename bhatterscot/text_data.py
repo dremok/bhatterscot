@@ -4,15 +4,37 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import itertools
+import os
 import re
 import unicodedata
 from io import open
 
 import torch
 
-from bhatterscot.vocabulary import Vocabulary, EOS_token, PAD_token
+from bhatterscot.vocabulary import EOS_token, PAD_token
 
 MAX_LENGTH = 20
+
+
+def load_sentence_pairs(corpus_name):
+    path = os.path.join('data', corpus_name)
+    files = os.listdir(path)
+    all_pairs = []
+    for file in files:
+        with open(os.path.join(path, file), 'r') as f:
+            lines = f.readlines()
+            all_pairs.extend(extract_sentence_pairs(lines))
+    return all_pairs
+
+
+def extract_sentence_pairs(lines):
+    qa_pairs = []
+    for i in range(len(lines) - 1):
+        input_line = normalize_string(lines[i].strip())
+        target_line = normalize_string(lines[i + 1].strip())
+        if input_line and target_line:
+            qa_pairs.append([input_line, target_line])
+    return qa_pairs
 
 
 def unicode2ascii(s):
@@ -32,14 +54,13 @@ def normalize_string(s):
     return s
 
 
-def read_vocs(datafile, corpus_name):
+def read_pairs(datafile):
     lines = open(datafile, encoding='utf-8'). \
         read().strip().split('\n')
     pairs = [[normalize_string(s)
               for s in l.split('\t')]
              for l in lines]
-    voc = Vocabulary(corpus_name)
-    return voc, pairs
+    return pairs
 
 
 # Returns True iff both sentences in a pair 'p' are under the MAX_LENGTH threshold
@@ -53,10 +74,8 @@ def filter_pairs(pairs):
     return [pair for pair in pairs if filter_pair(pair)]
 
 
-# Using the functions defined above, return a populated vocabulary object and pairs list
-def load_prepare_data(corpus_name, datafile):
+def load_prepare_data(voc, pairs):
     print('Start preparing text data ...')
-    voc, pairs = read_vocs(datafile, corpus_name)
     print('Read {!s} sentence pairs'.format(len(pairs)))
     pairs = filter_pairs(pairs)
     print('Trimmed to {!s} sentence pairs'.format(len(pairs)))
@@ -65,7 +84,7 @@ def load_prepare_data(corpus_name, datafile):
         voc.add_sentence(pair[0])
         voc.add_sentence(pair[1])
     print('Counted words:', voc.num_words)
-    return voc, pairs
+    return pairs
 
 
 def trim_rare_words(voc, pairs, min_count):

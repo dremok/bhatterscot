@@ -100,7 +100,7 @@ class LuongAttnDecoderRNN(nn.Module):
         rnn_output, hidden = self.gru(embedded, last_hidden)
         # Calculate attention weights from the current GRU output
         attn_weights = self.attn(rnn_output, encoder_outputs)
-        # Multiply attention weights to encoder outputs to get new "weighted sum" context vector
+        # Multiply attention weights to _encoder outputs to get new "weighted sum" context vector
         context = attn_weights.bmm(encoder_outputs.transpose(0, 1))
         # Concatenate weighted context vector and GRU output using Luong eq. 5
         rnn_output = rnn_output.squeeze(0)
@@ -139,20 +139,20 @@ def train(input_variable, lengths, target_variable, mask, max_target_len, encode
     print_losses = []
     n_totals = 0
 
-    # Forward pass through encoder
+    # Forward pass through _encoder
     encoder_outputs, encoder_hidden = encoder(input_variable, lengths)
 
-    # Create initial decoder input (start with SOS tokens for each sentence)
+    # Create initial _decoder input (start with SOS tokens for each sentence)
     decoder_input = torch.LongTensor([[SOS_token for _ in range(batch_size)]])
     decoder_input = decoder_input.to(device)
 
-    # Set initial decoder hidden state to the encoder's final hidden state
+    # Set initial _decoder hidden state to the _encoder's final hidden state
     decoder_hidden = encoder_hidden[:decoder.n_layers]
 
     # Determine if we are using teacher forcing this iteration
     use_teacher_forcing = True if random.random() < teacher_forcing_ratio else False
 
-    # Forward batch of sequences through decoder one time step at a time
+    # Forward batch of sequences through _decoder one time step at a time
     if use_teacher_forcing:
         for t in range(max_target_len):
             decoder_output, decoder_hidden = decoder(
@@ -170,7 +170,7 @@ def train(input_variable, lengths, target_variable, mask, max_target_len, encode
             decoder_output, decoder_hidden = decoder(
                 decoder_input, decoder_hidden, encoder_outputs
             )
-            # No teacher forcing: next input is decoder's own current output
+            # No teacher forcing: next input is _decoder's own current output
             _, topi = decoder_output.topk(1)
             decoder_input = torch.LongTensor([[topi[i][0] for i in range(batch_size)]])
             decoder_input = decoder_input.to(device)
@@ -194,9 +194,9 @@ def train(input_variable, lengths, target_variable, mask, max_target_len, encode
     return sum(print_losses) / n_totals
 
 
-def trainIters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, decoder_optimizer, embedding,
-               encoder_n_layers, decoder_n_layers, save_dir, n_iteration, batch_size, print_every, save_every, clip,
-               corpus_name, loadFilename, checkpoint):
+def train_iters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, decoder_optimizer, embedding,
+                encoder_n_layers, decoder_n_layers, save_dir, n_iteration, batch_size, print_every, save_every, clip,
+                corpus_name, load_filename, checkpoint):
     # Load batches for each iteration
     training_batches = [batch2train_data(voc, [random.choice(pairs) for _ in range(batch_size)])
                         for _ in range(n_iteration)]
@@ -205,7 +205,7 @@ def trainIters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, deco
     print('Initializing ...')
     start_iteration = 1
     print_loss = 0
-    if loadFilename:
+    if load_filename:
         start_iteration = checkpoint['iteration'] + 1
 
     # Training loop
@@ -229,7 +229,7 @@ def trainIters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, deco
             print_loss = 0
 
         # Save checkpoint
-        if (iteration % save_every == 0):
+        if iteration % save_every == 0:
             directory = os.path.join(save_dir, model_name, corpus_name,
                                      '{}-{}_{}'.format(encoder_n_layers, decoder_n_layers, hidden_size))
             if not os.path.exists(directory):
