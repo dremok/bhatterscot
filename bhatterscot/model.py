@@ -30,7 +30,7 @@ class Attn(torch.nn.Module):
         super(Attn, self).__init__()
         self.method = method
         if self.method not in ['dot', 'general', 'concat']:
-            raise ValueError(self.method, "is not an appropriate attention method.")
+            raise ValueError(self.method, 'is not an appropriate attention method.')
         self.hidden_size = hidden_size
         if self.method == 'general':
             self.attn = torch.nn.Linear(self.hidden_size, hidden_size)
