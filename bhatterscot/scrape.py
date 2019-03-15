@@ -39,10 +39,10 @@ def scrape_url(url):
         print('DONE!')
 
 
-def scrape_video_game_trainscripts():
+def scrape_video_game_transcripts():
     scrape_url('https://transcripts.fandom.com/wiki/Category:Video_Games')
     scrape_url('https://transcripts.fandom.com/wiki/Category:Video_Games?from=Robot+Carnival')
 
 
 if __name__ == '__main__':
-    scrape_video_game_trainscripts()
+    scrape_video_game_transcripts()
