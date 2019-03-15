@@ -24,6 +24,6 @@ SAVE_EVERY = 500
 CHECKPOINT_TO_LOAD = 5000
 
 # General config
-BASE_DIR = '/Users/max.leander/src/random/data'
+BASE_DIR = ''  # Set your local directory here
 MODEL_DIR = f'{BASE_DIR}/models'
 CORPUS_NAME = 'video_games'
