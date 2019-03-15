@@ -4,10 +4,12 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
+from bhatterscot.config import BASE_DIR, CORPUS_NAME
+
 HTML_PARSER = 'html.parser'
 
 
-def scrape_transcripts(url):
+def scrape_url(url):
     r = requests.get(url)
     soup = BeautifulSoup(r.content, HTML_PARSER)
     links = [l.get('href') for l in soup.find_all(name='a', attrs={'class': 'category-page__member-link'})]
@@ -30,12 +32,17 @@ def scrape_transcripts(url):
         if len(lines) < 10:
             print('too few lines.')
             continue
-        filepath = os.path.join('data', 'vg', f'{game_title}.txt')
-        os.makedirs(os.path.join('data', 'vg'), exist_ok=True)
+        filepath = os.path.join(BASE_DIR, CORPUS_NAME, f'{game_title}.txt')
+        os.makedirs(os.path.join(BASE_DIR, CORPUS_NAME), exist_ok=True)
         with open(filepath, 'w') as f:
             f.writelines([line + '\n' for line in lines])
         print('DONE!')
 
 
-scrape_transcripts('https://transcripts.fandom.com/wiki/Category:Video_Games')
-scrape_transcripts('https://transcripts.fandom.com/wiki/Category:Video_Games?from=Robot+Carnival')
+def scrape_video_game_trainscripts():
+    scrape_url('https://transcripts.fandom.com/wiki/Category:Video_Games')
+    scrape_url('https://transcripts.fandom.com/wiki/Category:Video_Games?from=Robot+Carnival')
+
+
+if __name__ == '__main__':
+    scrape_video_game_trainscripts()

@@ -4,16 +4,16 @@ import falcon
 from yattag import Doc
 
 from bhatterscot.chatbot import ChatBot
-from bhatterscot.config import save_dir, model_name, CORPUS_NAME, encoder_n_layers, decoder_n_layers, hidden_size, \
-    checkpoint_to_load
+from bhatterscot.config import MODEL_DIR, MODEL_NAME, CORPUS_NAME, ENCODER_N_LAYERS, DECODER_N_LAYERS, HIDDEN_SIZE, \
+    CHECKPOINT_TO_LOAD
 
 
 class ChatResource(object):
     def __init__(self):
-        load_filename = os.path.join(save_dir, model_name, CORPUS_NAME,
-                                     '{}-{}_{}'.format(encoder_n_layers, decoder_n_layers, hidden_size),
-                                     '{}_checkpoint.tar'.format(checkpoint_to_load))
-        self._chat_bot = ChatBot(load_filename)
+        model_file = os.path.join(MODEL_DIR, MODEL_NAME, CORPUS_NAME,
+                                  f'{ENCODER_N_LAYERS}-{DECODER_N_LAYERS}_{HIDDEN_SIZE}',
+                                  f'{CHECKPOINT_TO_LOAD}_checkpoint.tar')
+        self._chat_bot = ChatBot(model_file)
 
     def on_post(self, req, resp):
         input_query = req.get_param('query')

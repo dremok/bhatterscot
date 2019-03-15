@@ -1,29 +1,29 @@
 import torch
 
-USE_CUDA = torch.cuda.is_available()
-device = torch.device('cuda' if USE_CUDA else 'cpu')
+DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Configure models
-model_name = 'cb_model'
-attn_model = 'dot'
-# attn_model = 'general'
-# attn_model = 'concat'
-hidden_size = 500
-encoder_n_layers = 2
-decoder_n_layers = 2
-dropout = 0.1
-batch_size = 64
+MODEL_NAME = 'cb_model'
+ATTN_MODEL = 'dot'
+HIDDEN_SIZE = 500
+ENCODER_N_LAYERS = 2
+DECODER_N_LAYERS = 2
+DROPOUT = 0.1
+BATCH_SIZE = 64
 
 # Configure training/optimization
-clip = 50.0
-teacher_forcing_ratio = 0.9
-learning_rate = 0.0001
-decoder_learning_ratio = 5.0
-n_iteration = 5000
-print_every = 1
-save_every = 500
-checkpoint_to_load = 5000
+CLIP = 50.0
+TEACHER_FORCING_RATIO = 0.9
+LEARNING_RATE = 0.0001
+DECODER_LEARNING_RATIO = 5.0
+N_ITERATIONS = 5000
+PRINT_EVERY = 10
+SAVE_EVERY = 500
 
-save_dir = '/Users/max.leander/src/random/data/save'
+# Configure inference
+CHECKPOINT_TO_LOAD = 5000
 
-CORPUS_NAME = 'vg'
+# General config
+BASE_DIR = '/Users/max.leander/src/random/data'
+MODEL_DIR = f'{BASE_DIR}/models'
+CORPUS_NAME = 'video_games'

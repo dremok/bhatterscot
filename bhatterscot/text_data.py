@@ -114,7 +114,7 @@ def zero_padding(sentence_list, fillvalue=PAD_token):
     return list(itertools.zip_longest(*sentence_list, fillvalue=fillvalue))
 
 
-def binary_matrix(batch, value=PAD_token):
+def binary_matrix(batch):
     m = []
     for i, seq in enumerate(batch):
         m.append([])
