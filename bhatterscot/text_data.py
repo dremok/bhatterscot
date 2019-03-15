@@ -11,9 +11,8 @@ from io import open
 
 import torch
 
+from bhatterscot.config import MAX_LENGTH
 from bhatterscot.vocabulary import EOS_token, PAD_token
-
-MAX_LENGTH = 20
 
 
 def load_sentence_pairs(corpus_name):

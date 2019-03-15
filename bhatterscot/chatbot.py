@@ -72,13 +72,13 @@ class ChatBot:
         print(f'Bot: {output_sentence}')
         return output_sentence
 
-    def _evaluate(self, sentence, max_length=MAX_LENGTH):
+    def _evaluate(self, sentence):
         indexes_batch = [indexes_from_sentence(self._vocabulary, sentence)]
         lengths = torch.tensor([len(indexes) for indexes in indexes_batch])
         input_batch = torch.LongTensor(indexes_batch).transpose(0, 1)
         input_batch = input_batch.to(DEVICE)
         lengths = lengths.to(DEVICE)
-        tokens, scores = self._search_decoder(input_batch, lengths, max_length)
+        tokens, scores = self._search_decoder(input_batch, lengths)
         decoded_words = [self._vocabulary.index2word[token.item()] for token in tokens]
         return decoded_words
 
@@ -107,14 +107,14 @@ class GreedySearchDecoder(Module):
         self._encoder = encoder
         self._decoder = decoder
 
-    def forward(self, input_seq, input_length, max_length):
+    def forward(self, input_seq, input_length):
         encoder_outputs, encoder_hidden = self._encoder(input_seq, input_length)
         decoder_hidden = encoder_hidden[:self._decoder.n_layers]
         decoder_input = torch.ones(1, 1, device=DEVICE, dtype=torch.long) * SOS_token
         all_tokens = torch.zeros([0], device=DEVICE, dtype=torch.long)
         all_scores = torch.zeros([0], device=DEVICE)
 
-        for _ in range(max_length):
+        for _ in range(MAX_LENGTH):
             decoder_output, decoder_hidden = self._decoder(decoder_input, decoder_hidden, encoder_outputs)
             if random.random() > 1 - EXPLORE_PROB:
                 decoder_input = torch.multinomial(decoder_output, 1)[0]

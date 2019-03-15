@@ -2,6 +2,9 @@ import torch
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+# Configure text handling
+MAX_LENGTH = 20
+
 # Configure models
 MODEL_NAME = 'cb_model'
 ATTN_MODEL = 'dot'
