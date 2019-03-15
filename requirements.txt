@@ -1,4 +1,4 @@
-beautifulsoup4 4.7.1
+beautifulsoup4==4.7.1
 falcon==1.4.1
 gtts==2.0.3
 gunicorn==19.9.0
